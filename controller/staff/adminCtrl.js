@@ -1,11 +1,25 @@
+const Admin = require('../../model/Staff/Admin');
+
 // @desc Register admin
 // @route POST /api/admins/register
 // @acess  Private
-exports.registerAdmCtrl = (req, res) => {
+exports.registerAdmCtrl = async (req, res) => {
+  const { name, email, password } = req.body;
   try {
+    // Check if email exists
+    const adminFound = await Admin.findOne({ email });
+    if (adminFound) {
+      res.json('Admin Exists');
+    }
+    // register
+    const user = await Admin.create({
+      name,
+      email,
+      password,
+    });
     res.status(201).json({
       status: 'success',
-      data: 'Admin has been registered',
+      data: user,
     });
   } catch (error) {
     res.json({
@@ -18,14 +32,20 @@ exports.registerAdmCtrl = (req, res) => {
 // @desc     login admins
 // @route    POST /api/v1/admins/login
 // @access   Private
-exports.loginAdminCtrl = (req, res) => {
+exports.loginAdminCtrl = async (req, res) => {
+  const { email, password } = req.body;
   try {
-    res.status(201).json({
-      status: 'success',
-      data: 'Admin has been login',
-    });
+    // find user
+    const user = await Admin.findOne({ email });
+    if (!user) {
+      return res.json({ message: 'Invliad login crendentials' });
+    }
+    if (user && (await user.verifyPassword(password))) {
+      return res.json({ data: user });
+    }
+    return res.json({ message: 'Invliad login crendentials' });
   } catch (error) {
-    res.json({
+    return res.json({
       status: 'failed',
       error: error.message,
     });
