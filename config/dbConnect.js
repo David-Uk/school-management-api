@@ -1,14 +1,11 @@
-/* eslint-disable no-console */
-const mongoose = require('mongoose');
-
-const dbConnect = async (url) => {
+const mongoose = require("mongoose");
+const dbConnect = async () => {
   try {
-    await mongoose.connect(url);
-    console.log('DB connected successfully');
+    await mongoose.connect(process.env.MONGO_URL);
+    console.log("DB Connected Successfully");
   } catch (error) {
-    console.log('DB connection failed', error.message);
+    console.log("DB Connection failed", error.message);
   }
 };
 
-// dbConnect();
-module.exports = dbConnect;
+dbConnect();

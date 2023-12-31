@@ -1,5 +1,10 @@
-/* eslint-disable no-console */
 const express = require('express');
+const morgan = require('morgan');
+const {
+  globalErrHandler,
+  notFoundErr,
+} = require('../middlewares/globalErrHandler');
+
 const adminRouter = require('../routes/staff/adminRouter');
 
 const app = express();
@@ -7,40 +12,13 @@ const app = express();
 // Middlewares
 app.use(express.json()); // pass incoming json data
 
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.originalUrl}`);
-  next();
-});
+app.use(morgan('dev'));
 
-const user = {
-  name: 'John Does',
-  isAdmin: false,
-  isLogin: true,
-};
-
-const isLogin = (req, res, next) => {
-  if (user.isLogin) {
-    next();
-  } else {
-    res.status(401).json({
-      msg: 'Unauthorized',
-    });
-  }
-};
-
-const isAdmin = (req, res, next) => {
-  if (user.isAdmin) {
-    next();
-  } else {
-    res.status(401).json({
-      msg: 'Unauthorized, you are not admin',
-    });
-  }
-};
-
-app.use(isLogin, isAdmin);
 // Routes
-// admin register
 app.use('/api/v1/admins', adminRouter);
+
+// Error middlewares
+app.use(notFoundErr);
+app.use(globalErrHandler);
 
 module.exports = app;

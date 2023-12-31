@@ -1,58 +1,44 @@
-const AsyncHandler = require('express-async-handler');
-
+const AysncHandler = require('express-async-handler');
 const Admin = require('../../model/Staff/Admin');
+const generateToken = require('../../utils/generateToken');
+const verifyToken = require('../../utils/verifyToken');
 
 // @desc Register admin
 // @route POST /api/admins/register
 // @acess  Private
-exports.registerAdmCtrl = AsyncHandler(async (req, res) => {
+exports.registerAdmCtrl = AysncHandler(async (req, res) => {
   const { name, email, password } = req.body;
-  try {
-    // Check if email exists
-    const adminFound = await Admin.findOne({ email });
-    if (adminFound) {
-      throw new Error('Admin Exists');
-    }
-    // register
-    const user = await Admin.create({
-      name,
-      email,
-      password,
-    });
-    res.status(201).json({
-      status: 'success',
-      data: user,
-    });
-  } catch (error) {
-    res.json({
-      status: 'failed',
-      error: error.message,
-    });
+  // Check if email exists
+  const adminFound = await Admin.findOne({ email });
+  if (adminFound) {
+    throw new Error('Admin Exists');
   }
+  // register
+  const user = await Admin.create({
+    name,
+    email,
+    password,
+  });
+  res.status(201).json({
+    status: 'success',
+    data: user,
+  });
 });
-
 // @desc     login admins
 // @route    POST /api/v1/admins/login
 // @access   Private
-exports.loginAdminCtrl = async (req, res) => {
+exports.loginAdminCtrl = AysncHandler(async (req, res) => {
   const { email, password } = req.body;
-  try {
-    // find user
-    const user = await Admin.findOne({ email });
-    if (!user) {
-      return res.json({ message: 'Invliad login crendentials' });
-    }
-    if (user && (await user.verifyPassword(password))) {
-      return res.json({ data: user });
-    }
-    return res.json({ message: 'Invliad login crendentials' });
-  } catch (error) {
-    return res.json({
-      status: 'failed',
-      error: error.message,
-    });
+  // find user
+  const user = await Admin.findOne({ email });
+  if (!user) {
+    return res.json({ message: 'Invalid login crendentials' });
   }
-};
+  if (user && (await user.verifyPassword(password))) {
+    return res.json({ data: generateToken(user._id), user, verify });
+  }
+  return res.json({ message: 'Invalid login crendentials' });
+});
 
 // @desc     Get all admins
 // @route    GET /api/v1/admins
@@ -75,19 +61,20 @@ exports.getAdminsCtrl = (req, res) => {
 // @route    GET /api/v1/admins/:id
 // @access   Private
 
-exports.getAdminCtrl = (req, res) => {
-  try {
-    res.status(201).json({
+exports.getAdminProfileCtrl = AysncHandler(async (req, res) => {
+  const admin = await Admin.findById(req.userAuth._id).select(
+    '-password -createdAt -updatedAt',
+  );
+  if (!admin) {
+    throw new Error('Admin Not Found');
+  } else {
+    res.status(200).json({
       status: 'success',
-      data: 'single admin',
-    });
-  } catch (error) {
-    res.json({
-      status: 'failed',
-      error: error.message,
+      data: admin,
     });
   }
-};
+});
+
 // @desc    update admin
 // @route    UPDATE /api/v1/admins/:id
 // @access   Private
