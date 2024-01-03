@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 
@@ -15,17 +15,17 @@ const academicTermSchema = new Schema(
     duration: {
       type: String,
       required: true,
-      default: '3 months',
+      default: "3 months",
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Admin',
+      ref: "Admin",
       required: true,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-const AcademicTerm = mongoose.model('AcademicTerm', academicTermSchema);
+const AcademicTerm = mongoose.model("AcademicTerm", academicTermSchema);
 
 module.exports = AcademicTerm;

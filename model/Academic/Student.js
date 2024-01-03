@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-
+const mongoose = require("mongoose");
 const studentSchema = new mongoose.Schema(
   {
     name: {
@@ -17,41 +16,41 @@ const studentSchema = new mongoose.Schema(
     studentId: {
       type: String,
       required: true,
-      default() {
+      default: function () {
         return (
-          `STU${
-            Math.floor(100 + Math.random() * 900)
-          }${Date.now().toString().slice(2, 4)
-          }${this.name
-            .split(' ')
-            .map((name) => name[0])
-            .join('')
-            .toUpperCase()}`
+          "STU" +
+          Math.floor(100 + Math.random() * 900) +
+          Date.now().toString().slice(2, 4) +
+          this.name
+            .split(" ")
+            .map(name => name[0])
+            .join("")
+            .toUpperCase()
         );
       },
     },
     role: {
       type: String,
-      default: 'student',
+      default: "student",
     },
-    // Classes are from level 1 to 6
-    // keep track of the class level the student is in
+    //Classes are from level 1 to 6
+    //keep track of the class level the student is in
     classLevels: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'ClassLevel',
+        ref: "ClassLevel",
         required: true,
       },
     ],
     currentClassLevel: {
       type: String,
-      default() {
+      default: function () {
         return this.classLevels[this.classLevels.length - 1];
       },
     },
     academicYear: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'AcademicYear',
+      ref: "AcademicYear",
       required: true,
     },
     dateAdmitted: {
@@ -62,13 +61,13 @@ const studentSchema = new mongoose.Schema(
     examResults: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'ExamResult',
+        ref: "ExamResult",
       },
     ],
 
     program: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Program',
+      ref: "Program",
       required: true,
     },
 
@@ -111,17 +110,17 @@ const studentSchema = new mongoose.Schema(
     //     ref: "FinancialReport",
     //   },
     // ],
-    // year group
+    //year group
     yearGraduated: {
       type: String,
     },
   },
   {
     timestamps: true,
-  },
+  }
 );
 
-// model
-const Student = mongoose.model('Student', studentSchema);
+//model
+const Student = mongoose.model("Student", studentSchema);
 
 module.exports = Student;
