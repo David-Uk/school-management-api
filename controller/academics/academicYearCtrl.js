@@ -1,12 +1,12 @@
 /* eslint-disable no-underscore-dangle */
-const AysncHandler = require('express-async-handler');
+const AsyncHandler = require('express-async-handler');
 const AcademicYear = require('../../model/Academic/AcademicYear');
 const Admin = require('../../model/Staff/Admin');
 
 // @desc Create Academic Year
 // @route POST /api/v1/academic-years
 // @acess  Private
-exports.createAcademicYear = AysncHandler(async (req, res) => {
+exports.createAcademicYear = AsyncHandler(async (req, res) => {
   const { name, fromYear, toYear } = req.body;
   // check if exists
   const academicYear = await AcademicYear.findOne({ name });
@@ -34,7 +34,7 @@ exports.createAcademicYear = AysncHandler(async (req, res) => {
 // @desc  get all Academic Years
 // @route GET /api/v1/academic-years
 // @acess  Private
-exports.getAcademicYears = AysncHandler(async (req, res) => {
+exports.getAcademicYears = AsyncHandler(async (req, res) => {
   const academicYears = await AcademicYear.find();
 
   res.status(201).json({
@@ -47,7 +47,7 @@ exports.getAcademicYears = AysncHandler(async (req, res) => {
 // @desc  get single Academic Year
 // @route GET /api/v1/academic-years/:id
 // @acess  Private
-exports.getAcademicYear = AysncHandler(async (req, res) => {
+exports.getAcademicYear = AsyncHandler(async (req, res) => {
   const academicYears = await AcademicYear.findById(req.params.id);
 
   res.status(201).json({
@@ -60,7 +60,7 @@ exports.getAcademicYear = AysncHandler(async (req, res) => {
 // @desc   Update  Academic Year
 // @route  PUT /api/v1/academic-years/:id
 // @acess  Private
-exports.updateAcademicYear = AysncHandler(async (req, res) => {
+exports.updateAcademicYear = AsyncHandler(async (req, res) => {
   const { name, fromYear, toYear } = req.body;
   // check name exists
   const createAcademicYearFound = await AcademicYear.findOne({ name });
@@ -90,7 +90,7 @@ exports.updateAcademicYear = AysncHandler(async (req, res) => {
 // @desc   Update  Academic Year
 // @route  PUT /api/v1/academic-years/:id
 // @acess  Private
-exports.deleteAcademicYear = AysncHandler(async (req, res) => {
+exports.deleteAcademicYear = AsyncHandler(async (req, res) => {
   await AcademicYear.findByIdAndDelete(req.params.id);
 
   res.status(201).json({

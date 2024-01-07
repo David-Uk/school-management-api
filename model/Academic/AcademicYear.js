@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const academicYearSchema = new mongoose.Schema(
   {
@@ -20,31 +20,31 @@ const academicYearSchema = new mongoose.Schema(
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Admin",
+      ref: 'Admin',
       required: true,
     },
     students: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Student",
+        ref: 'Student',
       },
     ],
     teachers: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Teacher",
+        ref: 'Teacher',
       },
     ],
-    //Finance
-    //Librarian
-    //......
+    // Finance
+    // Librarian
+    // ......
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-//model
-const AcademicYear = mongoose.model("AcademicYear", academicYearSchema);
+// model
+const AcademicYear = mongoose.model('AcademicYear', academicYearSchema);
 
 module.exports = AcademicYear;
