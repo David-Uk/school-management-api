@@ -1,22 +1,24 @@
-const express = require("express");
+const express = require('express');
 const {
   globalErrHandler,
   notFoundErr,
-} = require("../middlewares/globalErrHandler");
-const academicYearRouter = require("../routes/academics/academicYear");
+} = require('../middlewares/globalErrHandler');
+const academicYearRouter = require('../routes/academics/academicYear');
 
-const adminRouter = require("../routes/staff/adminRouter");
+const adminRouter = require('../routes/staff/adminRouter');
+const academicTermRouter = require('../routes/academics/academicTerm');
 
 const app = express();
 
-//Middlewares
-app.use(express.json()); //pass incoming json data
+// Middlewares
+app.use(express.json()); // pass incoming json data
 
-//Routes
-app.use("/api/v1/admins", adminRouter);
-app.use("/api/v1/academic-years", academicYearRouter);
+// Routes
+app.use('/api/v1/admins', adminRouter);
+app.use('/api/v1/academic-years', academicYearRouter);
+app.use('/api/v1/academic-terms', academicTermRouter);
 
-//Error middlewares
+// Error middlewares
 app.use(notFoundErr);
 app.use(globalErrHandler);
 
