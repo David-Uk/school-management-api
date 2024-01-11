@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const {
   registerAdmCtrl,
   adminPublishResultsCtrl,
@@ -12,47 +12,47 @@ const {
   getAdminsCtrl,
   loginAdminCtrl,
   updateAdminCtrl,
-} = require('../../controller/staff/adminCtrl');
-const isAdmin = require('../../middlewares/isAdmin');
-const isLogin = require('../../middlewares/isLogin');
+} = require("../../controller/staff/adminCtrl");
+const isAdmin = require("../../middlewares/isAdmin");
+const isLogin = require("../../middlewares/isLogin");
 
 const adminRouter = express.Router();
 
-// register
-adminRouter.post('/register', registerAdmCtrl);
+//register
+adminRouter.post("/register", registerAdmCtrl);
 
-// login
-adminRouter.post('/login', loginAdminCtrl);
+//login
+adminRouter.post("/login", loginAdminCtrl);
 
-// get all
-adminRouter.get('/', isLogin, getAdminsCtrl);
+//get all
+adminRouter.get("/", isLogin, getAdminsCtrl);
 
-// single
+//single
 
-adminRouter.get('/profile', isLogin, isAdmin, getAdminProfileCtrl);
+adminRouter.get("/profile", isLogin, isAdmin, getAdminProfileCtrl);
 
-// update
-adminRouter.put('/', isLogin, isAdmin, updateAdminCtrl);
+//update
+adminRouter.put("/", isLogin, isAdmin, updateAdminCtrl);
 
-// delete
-adminRouter.delete('/:id', deleteAdminCtrl);
+//delete
+adminRouter.delete("/:id", deleteAdminCtrl);
 
-// suspend
-adminRouter.put('/suspend/teacher/:id', adminSuspendTeacherCtrl);
+//suspend
+adminRouter.put("/suspend/teacher/:id", adminSuspendTeacherCtrl);
 
-// unsuspend
-adminRouter.put('/unsuspend/teacher/:id', adminUnSuspendTeacherCtrl);
+//unsuspend
+adminRouter.put("/unsuspend/teacher/:id", adminUnSuspendTeacherCtrl);
 
-// withdraw
-adminRouter.put('/withdraw/teacher/:id', adminWithdrawTeacherCtrl);
+//withdraw
+adminRouter.put("/withdraw/teacher/:id", adminWithdrawTeacherCtrl);
 
-// unwithdraw
-adminRouter.put('/unwithdraw/teacher/:id', adminUnWithdrawTeacherCtrl);
+//unwithdraw
+adminRouter.put("/unwithdraw/teacher/:id", adminUnWithdrawTeacherCtrl);
 
-// publish exams
-adminRouter.put('/publish/exam/:id', adminPublishResultsCtrl);
+//publish exams
+adminRouter.put("/publish/exam/:id", adminPublishResultsCtrl);
 
-// unpublish exams results
-adminRouter.put('/unpublish/exam/:id', adminUnPublishResultsCtrl);
+//unpublish exams results
+adminRouter.put("/unpublish/exam/:id", adminUnPublishResultsCtrl);
 
 module.exports = adminRouter;

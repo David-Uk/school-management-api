@@ -5,6 +5,7 @@ const {
   getProgram,
   getPrograms,
   updatProgram,
+  addSubjectToProgram,
 } = require("../../controller/academics/programs");
 const isAdmin = require("../../middlewares/isAdmin");
 const isLogin = require("../../middlewares/isLogin");
@@ -24,6 +25,8 @@ programRouter
   .get(isLogin, isAdmin, getProgram)
   .put(isLogin, isAdmin, updatProgram)
   .delete(isLogin, isAdmin, deleteProgram);
+
+programRouter.put("/:id/subjects", isLogin, isAdmin, addSubjectToProgram);
 
 // academicTerRouter.get("/:id", isLogin, isAdmin, getAcademicYear);
 // academicTerRouter.put("/:id", isLogin, isAdmin, updateAcademicYear);

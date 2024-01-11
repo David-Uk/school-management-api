@@ -1,13 +1,13 @@
-const express = require('express');
+const express = require("express");
 const {
   createAcademicYear,
   getAcademicYears,
   getAcademicYear,
   updateAcademicYear,
   deleteAcademicYear,
-} = require('../../controller/academics/academicYearCtrl');
-const isAdmin = require('../../middlewares/isAdmin');
-const isLogin = require('../../middlewares/isLogin');
+} = require("../../controller/academics/academicYearCtrl");
+const isAdmin = require("../../middlewares/isAdmin");
+const isLogin = require("../../middlewares/isLogin");
 
 const academicYearRouter = express.Router();
 
@@ -15,12 +15,12 @@ const academicYearRouter = express.Router();
 // academicYearRouter.get("/", isLogin, isAdmin, getAcademicYears);
 
 academicYearRouter
-  .route('/')
+  .route("/")
   .post(isLogin, isAdmin, createAcademicYear)
   .get(isLogin, isAdmin, getAcademicYears);
 
 academicYearRouter
-  .route('/:id')
+  .route("/:id")
   .get(isLogin, isAdmin, getAcademicYear)
   .put(isLogin, isAdmin, updateAcademicYear)
   .delete(isLogin, isAdmin, deleteAcademicYear);
