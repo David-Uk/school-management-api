@@ -65,3 +65,21 @@ exports.getAllTeachersAdmin = AysncHandler(async (req, res) => {
     data: teachers,
   });
 });
+
+// @desc    Get Single Teacher
+// @route   GET /api/v1/teachers/:teacherID/admin
+// @access  Private admin only
+
+exports.getTeacherByAdmin = AysncHandler(async (req, res) => {
+  const { teacherID } = req.params;
+  // find the teacher
+  const teacher = await Teacher.findById(teacherID);
+  if (!teacher) {
+    throw new Error('Teacher not found');
+  }
+  res.status(200).json({
+    status: 'success',
+    message: 'Teacher fetched successfully',
+    data: teacher,
+  });
+});
