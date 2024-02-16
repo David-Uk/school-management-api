@@ -1,8 +1,8 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-//examSchema
+// examSchema
 const examSchema = new Schema(
   {
     name: {
@@ -15,12 +15,12 @@ const examSchema = new Schema(
     },
     subject: {
       type: Schema.Types.ObjectId,
-      ref: "Subject",
+      ref: 'Subject',
       required: true,
     },
     program: {
       type: Schema.Types.ObjectId,
-      ref: "Program",
+      ref: 'Program',
       required: true,
     },
     passMark: {
@@ -33,16 +33,10 @@ const examSchema = new Schema(
       required: true,
       default: 100,
     },
-
-    academicTerm: {
-      type: Schema.Types.ObjectId,
-      ref: "AcademicTerm",
-      required: true,
-    },
     duration: {
       type: String,
       required: true,
-      default: "30 minutes",
+      default: '30 minutes',
     },
     examDate: {
       type: Date,
@@ -55,44 +49,44 @@ const examSchema = new Schema(
     examType: {
       type: String,
       required: true,
-      default: "Quiz",
+      default: 'Quiz',
     },
     examStatus: {
       type: String,
       required: true,
-      default: "Pending",
-      enum: ["pending", "live"],
+      default: 'Pending',
+      enum: ['pending', 'live'],
     },
     questions: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Question",
+        ref: 'Question',
       },
     ],
     classLevel: {
       type: Schema.Types.ObjectId,
-      ref: "ClassLevel",
+      ref: 'ClassLevel',
       required: true,
     },
     createdBy: {
       type: Schema.Types.ObjectId,
-      ref: "Teacher",
+      ref: 'Teacher',
       required: true,
     },
     academicTerm: {
       type: Schema.Types.ObjectId,
-      ref: "AcademicTerm",
+      ref: 'AcademicTerm',
       required: true,
     },
     academicYear: {
       type: Schema.Types.ObjectId,
-      ref: "AcademicYear",
+      ref: 'AcademicYear',
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-const Exam = mongoose.model("Exam", examSchema);
+const Exam = mongoose.model('Exam', examSchema);
 
 module.exports = Exam;

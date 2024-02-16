@@ -1,20 +1,20 @@
-const AysncHandler = require("express-async-handler");
-const Teacher = require("../../model/Staff/Teacher");
-const generateToken = require("../../utils/generateToken");
-const { hashPassword, isPassMatched } = require("../../utils/helpers");
+const AysncHandler = require('express-async-handler');
+const Teacher = require('../../model/Staff/Teacher');
+const generateToken = require('../../utils/generateToken');
+const { hashPassword, isPassMatched } = require('../../utils/helpers');
 
-//@desc  Admin Register Teacher
-//@route POST /api/teachers/admin/register
-//@acess  Private
+// @desc  Admin Register Teacher
+// @route POST /api/teachers/admin/register
+// @acess  Private
 
 exports.adminRegisterTeacher = AysncHandler(async (req, res) => {
   const { name, email, password } = req.body;
-  //check if teacher already exists
+  // check if teacher already exists
   const teacher = await Teacher.findOne({ email });
   if (teacher) {
-    throw new Error("Teacher already employed");
+    throw new Error('Teacher already employed');
   }
-  //Hash password
+  // Hash password
   const hashedPassword = await hashPassword(password);
   // create
   const teacherCreated = await Teacher.create({
@@ -22,106 +22,105 @@ exports.adminRegisterTeacher = AysncHandler(async (req, res) => {
     email,
     password: hashedPassword,
   });
-  //send teacher data
+  // send teacher data
   res.status(201).json({
-    status: "success",
-    message: "Teacher registered successfully",
+    status: 'success',
+    message: 'Teacher registered successfully',
     data: teacherCreated,
   });
 });
 
-//@desc    login a teacher
-//@route   POST /api/v1/teachers/login
-//@access  Public
+// @desc    login a teacher
+// @route   POST /api/v1/teachers/login
+// @access  Public
 
 exports.loginTeacher = AysncHandler(async (req, res) => {
   const { email, password } = req.body;
-  //find the  user
+  // find the  user
   const teacher = await Teacher.findOne({ email });
   if (!teacher) {
-    return res.json({ message: "Invalid login crendentials" });
+    return res.json({ message: 'Invalid login crendentials' });
   }
-  //verify the password
+  // verify the password
   const isMatched = await isPassMatched(password, teacher?.password);
   if (!isMatched) {
-    return res.json({ message: "Invalid login crendentials" });
-  } else {
-    res.status(200).json({
-      status: "success",
-      message: "Teacher logged in successfully",
-      data: generateToken(teacher?._id),
-    });
+    return res.json({ message: 'Invalid login crendentials' });
   }
+  res.status(200).json({
+    status: 'success',
+    message: 'Teacher logged in successfully',
+    data: generateToken(teacher?._id),
+  });
 });
 
-//@desc    Get all Teachers
-//@route   GET /api/v1/admin/teachers
-//@access  Private admin only
+// @desc    Get all Teachers
+// @route   GET /api/v1/admin/teachers
+// @access  Private admin only
 
 exports.getAllTeachersAdmin = AysncHandler(async (req, res) => {
   const teachers = await Teacher.find();
   res.status(200).json({
-    status: "success",
-    message: "Teachers fetched successfully",
+    status: 'success',
+    message: 'Teachers fetched successfully',
     data: teachers,
   });
 });
 
-//@desc    Get Single Teacher
-//@route   GET /api/v1/teachers/:teacherID/admin
-//@access  Private admin only
+// @desc    Get Single Teacher
+// @route   GET /api/v1/teachers/:teacherID/admin
+// @access  Private admin only
 
 exports.getTeacherByAdmin = AysncHandler(async (req, res) => {
-  const teacherID = req.params.teacherID;
-  //find the teacher
+  const { teacherID } = req.params;
+  // find the teacher
   const teacher = await Teacher.findById(teacherID);
   if (!teacher) {
-    throw new Error("Teacher not found");
+    throw new Error('Teacher not found');
   }
   res.status(200).json({
-    status: "success",
-    message: "Teacher fetched successfully",
+    status: 'success',
+    message: 'Teacher fetched successfully',
     data: teacher,
   });
 });
 
-//@desc    Teacher Profile
-//@route   GET /api/v1/teachers/profile
-//@access  Private Teacher only
+// @desc    Teacher Profile
+// @route   GET /api/v1/teachers/profile
+// @access  Private Teacher only
 
 exports.getTeacherProfile = AysncHandler(async (req, res) => {
-  const teacher = await Teacher.findById(req.userAuth?._id).select(
-    "-password -createdAt -updatedAt"
+  const teacher = await Teacher.findById(req?.userAuth?._id).select(
+    '-password -createdAt -updatedAt',
   );
   if (!teacher) {
-    throw new Error("Teacher not found");
+    throw new Error('Teacher not found');
   }
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: teacher,
-    message: "Teacher Profile fetched  successfully",
+    message: 'Teacher Profile fetched  successfully',
   });
 });
 
-//@desc    Teacher updating profile admin
-//@route    UPDATE /api/v1/teachers/:teacherID/update
-//@access   Private Teacher only
+// @desc    Teacher updating profile admin
+// @route    UPDATE /api/v1/teachers/:teacherID/update
+// @access   Private Teacher only
 
 exports.teacherUpdateProfile = AysncHandler(async (req, res) => {
   const { email, name, password } = req.body;
-  //if email is taken
+  // if email is taken
   const emailExist = await Teacher.findOne({ email });
   if (emailExist) {
-    throw new Error("This email is taken/exist");
+    throw new Error('This email is taken/exist');
   }
 
-  //hash password
-  //check if user is updating password
+  // hash password
+  // check if user is updating password
 
   if (password) {
-    //update
+    // update
     const teacher = await Teacher.findByIdAndUpdate(
-      req.userAuth._id,
+      req?.userAuth?._id,
       {
         email,
         password: await hashPassword(password),
@@ -130,15 +129,15 @@ exports.teacherUpdateProfile = AysncHandler(async (req, res) => {
       {
         new: true,
         runValidators: true,
-      }
+      },
     );
     res.status(200).json({
-      status: "success",
+      status: 'success',
       data: teacher,
-      message: "Teacher updated successfully",
+      message: 'Teacher updated successfully',
     });
   } else {
-    //update
+    // update
     const teacher = await Teacher.findByIdAndUpdate(
       req.userAuth._id,
       {
@@ -148,72 +147,74 @@ exports.teacherUpdateProfile = AysncHandler(async (req, res) => {
       {
         new: true,
         runValidators: true,
-      }
+      },
     );
     res.status(200).json({
-      status: "success",
+      status: 'success',
       data: teacher,
-      message: "Teacher updated successfully",
+      message: 'Teacher updated successfully',
     });
   }
 });
 
-//@desc     Admin updating Teacher profile
-//@route    UPDATE /api/v1/teachers/:teacherID/admin
-//@access   Private Admin only
+// @desc     Admin updating Teacher profile
+// @route    UPDATE /api/v1/teachers/:teacherID/admin
+// @access   Private Admin only
 
 exports.adminUpdateTeacher = AysncHandler(async (req, res) => {
-  const { program, classLevel, academicYear, subject } = req.body;
-  //if email is taken
+  const {
+    program, classLevel, academicYear, subject,
+  } = req.body;
+  // if email is taken
   const teacherFound = await Teacher.findById(req.params.teacherID);
   if (!teacherFound) {
-    throw new Error("Teacher not found");
+    throw new Error('Teacher not found');
   }
-  //Check if teacher is withdrawn
+  // Check if teacher is withdrawn
   if (teacherFound.isWitdrawn) {
-    throw new Error("Action denied, teacher is withdraw");
+    throw new Error('Action denied, teacher is withdraw');
   }
-  //assign a program
+  // assign a program
   if (program) {
     teacherFound.program = program;
     await teacherFound.save();
     res.status(200).json({
-      status: "success",
+      status: 'success',
       data: teacherFound,
-      message: "Teacher updated successfully",
+      message: 'Teacher updated successfully',
     });
   }
 
-  //assign Class level
+  // assign Class level
   if (classLevel) {
     teacherFound.classLevel = classLevel;
     await teacherFound.save();
     res.status(200).json({
-      status: "success",
+      status: 'success',
       data: teacherFound,
-      message: "Teacher updated successfully",
+      message: 'Teacher updated successfully',
     });
   }
 
-  //assign Academic year
+  // assign Academic year
   if (academicYear) {
     teacherFound.academicYear = academicYear;
     await teacherFound.save();
     res.status(200).json({
-      status: "success",
+      status: 'success',
       data: teacherFound,
-      message: "Teacher updated successfully",
+      message: 'Teacher updated successfully',
     });
   }
 
-  //assign subject
+  // assign subject
   if (subject) {
     teacherFound.subject = subject;
     await teacherFound.save();
     res.status(200).json({
-      status: "success",
+      status: 'success',
       data: teacherFound,
-      message: "Teacher updated successfully",
+      message: 'Teacher updated successfully',
     });
   }
 });
